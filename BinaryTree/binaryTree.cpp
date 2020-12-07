@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stack>
+#include <queue>
 using namespace std;
 
 struct TreeNode
@@ -120,6 +121,24 @@ class Traverse{
             }
         }
 
+        void bfs(TreeNode* root){
+            if(!root){return;}
+            queue <TreeNode*> stack; // queue只能从尾部添加 从头部移除
+            stack.push(root);
+            while(!stack.empty()) {
+                TreeNode* currentNode;
+                currentNode = stack.front();
+                stack.pop(); // 无返回值
+                cout << currentNode->data << " ";
+                if(currentNode->left) {
+                    stack.push(currentNode->left);
+                }
+                if(currentNode->right) {
+                    stack.push(currentNode->right);
+                }
+            }
+        }
+
 };
 
 int main(){
@@ -156,4 +175,8 @@ int main(){
     cout << endl;
 
     t.postOrderNonRecursion(&node1);
+
+    cout << endl;
+
+    t.bfs(&node1);
 }
