@@ -19,6 +19,11 @@ struct TreeNode
 class Solution {
 public:
     vector<vector<int> > levelOrder(TreeNode* root) {
+        /* 
+        Complexity:
+            time: O(N)
+            space: O(N)
+         */
         vector<vector<int> > res;
         if(root == nullptr) {return res;}
         queue<TreeNode*> stack;
