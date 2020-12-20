@@ -58,6 +58,19 @@ public:
         }
         return pos1;
     }
+
+    ListNode* reverseList3(ListNode* head){
+        /* 递归
+        Complexity:
+            time: O(n)
+            space: O(n) */
+        if(!head || !head->next) {return head;}
+        if(!head->next) {return head;}
+        ListNode* last = reverseList3(head->next);
+        head->next->next = head;
+        head->next = NULL;
+        return last;
+    }
 };
 
 
@@ -71,19 +84,12 @@ int main(){
 
     Solution s;
     ListNode* res;
-    res = s.reverseList(node1);
+    res = s.reverseList(node1);  // 进栈
+    // res = s.reverseList2(node1);  // 双指针
+    // res = s.reverseList3(node1);  // 递归
     while(res){
         cout << res->val << ' ';
         res = res->next;
-    }
-
-    cout << endl;
-
-    ListNode* res2;
-    res2 = s.reverseList2(node1);
-    while(res2){
-        cout << res2->val << ' ';
-        res2 = res2->next;
     }
 }
 
