@@ -1,4 +1,5 @@
 #include <iostream>
+#include <map>
 using namespace std;
 
 /*
@@ -23,20 +24,105 @@ struct ListNode{
 class Solution {
 public:
     ListNode* deleteDuplicates(ListNode* head) {
-    /*Complexity:
-     *      time: O(n)
-     *      space: O(1)
-     *      */
-    ListNode* currentNode = head;
-    while(currentNode != NULL && currentNode->next != NULL){
-        if(currentNode->val == currentNode->next->val){
-            currentNode->next = currentNode->next->next;
+        /* 指针 in-place
+         * Complexity:
+         *      time: O(n)
+         *      space: O(1)
+         *      */
+        ListNode* currentNode = head;
+        while(currentNode != NULL && currentNode->next != NULL){
+            if(currentNode->val == currentNode->next->val){
+                currentNode->next = currentNode->next->next;
+            }
+            else{
+                currentNode = currentNode->next;
+            }
+        }
+        return head;
+    }
+
+    ListNode* deleteDuplicatesTwoPtrs(ListNode* head){
+        /* 双指针
+         * Complexity:
+         *      time: O(n)
+         *      space: O(1)
+         *      */
+        if (!head || !head->next){return head;}
+
+        ListNode* dummy = new ListNode(-1);
+        dummy->next = head;
+        ListNode* pre = head;
+        ListNode* cur = head->next;
+        while (cur){
+            if (pre->val != cur->val){
+                pre = pre->next;
+                cur = cur->next;
+            }
+            else{
+                while (cur && pre->val == cur->val){
+                    cur = cur->next;
+                }
+                pre->next = cur;
+            }
+        }
+        return dummy->next;
+    }
+
+    ListNode* deleteDuplicatesHash(ListNode* head){
+        /* Hash
+         * Complexity:
+         *      time: O(n)
+         *      space: O(n)
+         *      */
+        if(!head){return head;}
+
+        ListNode* p = head;
+        map<int, int> hash;
+        while (p){
+            if (hash.count(p->val) >= 1){
+                hash[p->val] ++;
+            } else{
+                hash[p->val] = 1;
+            }
+            p = p->next;
+        }
+
+        ListNode* dummy = new ListNode(-1);
+        ListNode* res = dummy;
+        ListNode* cur = head;
+        while (cur){
+            while (cur && hash[cur->val] > 1){
+                cur = cur->next;
+                hash[cur->val] --;
+            }
+            res->next = cur;
+            res = res->next;
+            if (cur->next){
+                cur = cur->next;
+            }
+            else{
+                cur = nullptr;
+            }
+        }
+        return dummy->next;
+    }
+
+    ListNode* deleteDuplicatesRecursion(ListNode* head){
+        /* 递归
+         * Complexity:
+         *      time: O(n)
+         *      space: O(n)
+         *      */
+        if (!head || !head->next){return head;}
+
+        ListNode* sub = deleteDuplicatesRecursion(head->next);
+        if (head->val == sub->val){
+            return sub;
         }
         else{
-            currentNode = currentNode->next;
+            head->next = sub;
+            return head;
         }
-    }
-    return head;
     }
 };
 
@@ -48,9 +134,13 @@ int main(){
     node2 -> next = node3;
 
     Solution s;
-    ListNode* res = s.deleteDuplicates(node1);
+    ListNode* res;
+//    res = s.deleteDuplicates(node1);  // 指针 in-place
+//    res = s.deleteDuplicatesTwoPtrs(node1);  // 双指针
+//    res = s.deleteDuplicatesHash(node1);  // hash
+    res = s.deleteDuplicatesRecursion(node1);  // 递归
     while(res){
-        cout << res->val;
+        cout << res->val << ' ';
         res = res->next;
     }
 }
