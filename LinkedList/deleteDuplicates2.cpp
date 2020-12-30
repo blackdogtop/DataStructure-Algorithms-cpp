@@ -22,9 +22,9 @@ struct ListNode{
 class Solution {
 public:
     ListNode* deleteDuplicates(ListNode* head) {
-        /*
+        /* Hash
          * Complexity:
-         *      time: O(2n)
+         *      time: O(n)
          *      space: O(n)
          *      */
         if(!(head && head->next)) {return head;}
@@ -57,7 +57,8 @@ public:
 
 
     ListNode* deleteDuplicates2(ListNode* head) {
-        /*Complexity:
+        /* 双指针
+         * Complexity:
          *      time: O(n)
          *      space: O(1)*/
         if (!(head && head->next)) {return head;}
@@ -80,7 +81,29 @@ public:
             }
         }
         return dummy->next;
+    }
+
+    ListNode* deleteDuplicatesRecursion(ListNode* head) {
+        /* 递归
+         * Complexity:
+         *      time: O(n)
+         *      space: O(n)
+         *      */
+        if (!head || !head->next){return head;}
+
+        if(head->val == head->next->val){
+            while (head->next && head->val == head->next->val){
+                head->next = head->next->next;
+            }
+            ListNode* sub = deleteDuplicatesRecursion(head->next);
+            return sub;
         }
+        else{
+            ListNode* sub = deleteDuplicatesRecursion(head->next);
+            head->next = sub;
+            return head;
+        }
+    }
 };
 
 
@@ -94,17 +117,12 @@ int main(){
 
     Solution s;
     ListNode* res;
-    res = s.deleteDuplicates(node1);
+//    res = s.deleteDuplicates(node1);  // hash
+//    res = s.deleteDuplicates2(node1);  // 双指针
+    res = s.deleteDuplicatesRecursion(node1);  // 递归
     while(res){
         cout << res->val << ' ';
         res = res->next;
-    }
-
-    ListNode* res2;
-    res2 = s.deleteDuplicates2(node1);
-    while(res2){
-        cout << res2->val << ' ';
-        res2 = res2->next;
     }
 
 }
