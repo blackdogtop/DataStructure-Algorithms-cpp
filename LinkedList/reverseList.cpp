@@ -22,22 +22,23 @@ public:
     ListNode* reverseList(ListNode* head) {
         /* 进栈方法
          * Complexity:
-         *      time: O(2n)
+         *      time: O(n)
          *      space: O(n)
          *      */
-        vector<int> stack;
+        vector<ListNode*> stack;
         ListNode* currentNode = head;
         while (currentNode){
-            stack.push_back(currentNode->val);
+            stack.push_back(currentNode);
             currentNode = currentNode->next;
         }
         ListNode* dummy = new ListNode(-1);
         ListNode* p = dummy;
         while (!stack.empty()){
-            p->next = new ListNode(stack.back());
+            p->next = stack.back();
             stack.pop_back();
             p = p->next;
         }
+        p->next = nullptr;
         return dummy->next;
     }
 
