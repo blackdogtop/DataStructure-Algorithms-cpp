@@ -17,7 +17,8 @@ struct ListNode{
 class Solution {
 public:
     ListNode* reverseBetween(ListNode* head, int m, int n) {
-        /* Complexity:
+        /* 递归 + 递归反转前N
+         * Complexity:
          *      time: O(n) - n is param
          *      space: O(n) - n is param
          *      */
@@ -31,8 +32,8 @@ public:
     ListNode* reverseN(ListNode* head, int n){
         /* 反转链表前n个节点
          * Complexity:
-         *      time: O(n) - n is the param
-         *      space: O(n) - n is the param
+         *      time: O(n)
+         *      space: O(n)
          *      */
         if (n == 1){
             successor = head->next;
@@ -42,6 +43,42 @@ public:
         head->next->next = head;
         head->next = successor;
         return last;
+    }
+
+    ListNode* reverseIter(ListNode* head, int n){
+        /* 反转链表前n个节点
+         * Complexity:
+         *      time: O(n)
+         *      space: O(1)
+         *      */
+        if (!head || !head->next){return head;}
+
+        ListNode* dummy = new ListNode(-1);
+        ListNode* pre = dummy;
+        pre->next = head;
+        ListNode* cur = head;
+
+        for (int i=1; i<n; i++){
+            ListNode* nex = cur->next;
+
+            cur->next = nex->next;
+            nex->next = pre->next;
+            pre->next = nex;
+        }
+        return dummy->next;
+    }
+
+    ListNode* reverseBetweenIter(ListNode* head, int m, int n) {
+        /* 递归 + 迭代链表前N
+         * Complexity:
+         *      time: O(n) - n为参数
+         *      space: O(m) - m为参数
+         *      */
+        if (m == 1){
+            return reverseIter(head, n);
+        }
+        head->next = reverseBetweenIter(head->next, m-1, n-1);
+        return head;
     }
 
 private:
@@ -62,7 +99,8 @@ int main(){
     node4->next = node5;
 
     Solution s;
-    ListNode* res = s.reverseBetween(node1, 3,4);
+//    ListNode* res = s.reverseBetween(node1, 3,4);  // 递归 + 递归反转前N
+    ListNode* res = s.reverseBetweenIter(node1, 2, 4);  // 递归 + 迭代反转前N
     while(res){
         cout << res->val << ' ';
         res = res->next;
