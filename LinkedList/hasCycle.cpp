@@ -25,7 +25,7 @@ class Solution {
 public:
     bool hasCycle(ListNode *head) {
         /* Complexity:
-         *      time: O(NlogN)
+         *      time: O(N) ?
          *      space: O(N)
          *      */
         unordered_set <ListNode*> seen;
