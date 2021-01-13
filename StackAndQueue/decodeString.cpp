@@ -46,11 +46,47 @@ public:
     }
     return res;
     }
+
+    string decodeStringRecursion(string s) {
+        /* Recursion
+         * Complexity:
+         *      time: O(n)
+         *      space: O(n) - 最差 */
+        int i = 0;
+        return recursion(i, s);
+    }
+
+    string recursion(int& i, string& s){
+        string res;
+        int multi = 0;
+        while (i < s.size()){
+            if (s[i] >= '0' && s[i] <= '9'){
+                multi = multi * 10 + (int)(s[i] - '0');
+            }
+            else if (s[i] == '['){
+                string temp1 = "";
+                string temp2 = recursion(++i, s);
+                while (multi){
+                    temp1.append(temp2);
+                    --multi;
+                }
+                res += temp1;
+            } else if (s[i] == ']'){
+                return res;
+            } else{
+                res += s[i];
+            }
+            ++i;
+        }
+
+        return res;
+    }
 };
 
 int main(){
-    string test = "3[a]2[bc]";
+    string test = "3[a2[b]]";
     Solution s;
-    string res = s.decodeString(test);
+//    string res = s.decodeString(test);  // stack
+    string res = s.decodeStringRecursion(test);  // recursion
     cout << res << endl;
 }
